@@ -16,6 +16,8 @@ def init():
     print("Launching...")
     setup() # stuff to be ran before bot launches
     ROBOT.wait_start() # start the robot
+    
+    test() # run the test function
     return
 
 
@@ -27,7 +29,7 @@ def test():
         time.sleep(1000)   # wait 1 second
         MOVEMENT.backward() # move backward
         time.sleep(1000)   # wait 1 second
-        
+
     return
 
 init()
