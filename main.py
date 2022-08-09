@@ -6,7 +6,6 @@ import time
 # configuration constants - change these but not others unless you know what you're doing
 TESTING=False
 
-
 # code based constants - don't change these unless you know what you're doing
 ENVIRONMENT = HardwareEnvironment if not TESTING else ConsoleEnvironment # environment to run in
 ROBOT = Robot(wait_start=False, debug=True, ) # create the robot object
