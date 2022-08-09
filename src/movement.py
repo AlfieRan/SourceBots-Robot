@@ -20,8 +20,8 @@ class Motor:
         self.MOTOR.power = BRAKE
 
 class Movement:
-    defualt_turning_power = 50 # default power for motors
-    defualt_speed = 100 # default speed for motors
+    defualt_turning_power = 15 # default power for motors
+    defualt_speed = 20 # default speed for motors
 
     def __init__(self, motor_left: Motor, motor_right: Motor):
         # setup motors

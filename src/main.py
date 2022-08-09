@@ -31,13 +31,19 @@ def test():
 
     for i in range(0, 5):
         MOVEMENT.forward() # move forward
-        time.sleep(1000)   # wait 1 second
+        time.sleep(1)   # wait 1 second
         MOVEMENT.stop()  # stop
-        time.sleep(1000)   # wait 1 second
+        time.sleep(1)   # wait 1 second
         MOVEMENT.backward() # move backward
-        time.sleep(1000)   # wait 1 second
+        time.sleep(1)   # wait 1 second
         MOVEMENT.stop()  # stop
-        time.sleep(1000)   # wait 1 second
+        time.sleep(1)   # wait 1 second
+        MOVEMENT.turn_right()
+        time.sleep(1)
+        MOVEMENT.stop()
+        time.sleep(1)
+        MOVEMENT.turn_left()
+        time.sleep(1)
 
     return
 
