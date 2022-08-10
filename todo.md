@@ -3,6 +3,7 @@
 ## localisation:
 
 -   starting positions should be according to the rules, not i
+-   Using circle intersections stuff, get two markers from a wall and use them to calculate the robots current position
 
 ## main
 
