@@ -12,3 +12,6 @@ def distance(a, b):
 
 def epoch_time(self):
         return int(time.time())
+
+def time_since(self, time):
+    return epoch_time() - time

@@ -64,9 +64,7 @@ class Scoring_Zones:
         zone_co_ord = (xLayer["index"], yLayer["index"])
         print(f"Co-ord: {(x,y)}\nZone: {zone_co_ord}")
         
-
-
-        # Now need to implement a checker to ensure the bot is not on a white line, then return which zone it is in
+        return zone_co_ord
 
     def get_all_good_points(self, accuracy):
         in_zone = []
