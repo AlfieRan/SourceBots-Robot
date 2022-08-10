@@ -72,11 +72,10 @@ class Scoring_Zones:
         in_zone = []
         for x in range(-27*accuracy, 27*accuracy, 1):
             for y in range(-27*accuracy, 27*accuracy, 1):
-                if zones.check_in_zone(x/10*accuracy,y/10*accuracy) != False:
+                if Zones.check_in_zone(x/10*accuracy,y/10*accuracy) != False:
                     in_zone.append((x/10*accuracy,y/10*accuracy))
 
         print("\n\n\n\n Co-ords in zones are:")
         print(in_zone)
 
-zones = Scoring_Zones()
-zones.check_in_zone(1.3, -1)
+Zones = Scoring_Zones()
