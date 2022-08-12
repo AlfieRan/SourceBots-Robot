@@ -106,6 +106,7 @@ class local:
         return bearing
 
     def get_co_ords(self):
+        print("getting co-ords")
         self.ROBOT.motor_board.motors[0].power = 0
         self.ROBOT.motor_board.motors[1].power = 0
         markers = self.CAMERA.see()
@@ -120,13 +121,19 @@ class local:
                 elif best_dir.spherical.rot_y > marker.spherical.rot_y:
                     best_dir = marker
 
+        if best_dir == None:
+            return STARTING_POS[self.starting_zone]
+
         co_ords = WALL_MARKER_CO_ORDS[best_dir.id]
         rot = best_dir.spherical.rot_y
-        dist = best_dir.distance
+        dist = best_dir.distance / 1000
         return (co_ords[0]-(dist * math.sin(rot)),co_ords[1]-(dist * math.cos(rot)))
 
             
     def get_closest_token(self, tokens):
+        if len(tokens) < 1:
+            return None
+
         closest = tokens[0]
         dist = 999
 
@@ -138,7 +145,10 @@ class local:
         return closest
 
     def in_zone(self):
+        print("detecting if in zone")
         pos = self.get_co_ords()
+        print("got the local position")
+        print("checking if pos is in a zone")
         return (self.ZONES.check_in_zone(pos[0], pos[1]) != False)
 
     def get_co_ords_old(self):

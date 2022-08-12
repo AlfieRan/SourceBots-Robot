@@ -47,11 +47,11 @@ class Movement:
         self.motor_right = motor_right
 
     def goto_pos(self, x, y):
-        Local = self.LOCAL.get
-        while(utils.distance((Local.x, Local.y), (x,y)) > 500):
+        Local = self.LOCAL.get_co_ords()
+        while(utils.distance((Local[0], Local[1]), (x,y)) > 500):
             self.lookat_pos(x,y)
             self.set_forward()
-            print(f"Currently {utils.distance((Local.x, Local.y),(x,y))} from object")
+            print(f"Currently {utils.distance((Local[0], Local[1]),(x,y))} from object")
 
         self.set_forward(20)
         time.sleep(1)
@@ -121,7 +121,7 @@ class Movement:
                 print("No token detected, rotating")
                 self.set_turn_right()
                 time.sleep(0.1)
-                self.stop()
+                self.stop_instantly()
                 time.sleep(0.2)
             else:
                 return nearest_token
@@ -150,27 +150,57 @@ class Movement:
 
     def lookat_pos(self, x, y):
         print("Looking at position started")
-        angle = 4
-        local_angle = self.LOCAL.get_angle()
-        while abs(angle - local_angle) > self.angle_accuracy:
-            angle = self.get_angle_to_pos(x, y)
-            print(f"Current angle to {(x,y)} is {angle} radians")
+        markers = self.CAMERA.see()
+        walls = []
 
-            if (angle - local_angle) > 0:
-                print("turning right")
-                self.set_turn_right(10)
-            else:
-                print("turning left")
-                self.set_turn_left(10)
+        for marker in markers:
+            if marker.id < 28:
+                walls.append(marker)
             
-            time.sleep(0.3)
+        closest = None
+        if len(walls) > 0:
+            for wall in walls:
+                if closest == None or closest.distance > wall.distance:
+                    closest = wall
+                # find closest wall, if it's below 1 meter then turn away
+            if (wall.spherical.rot_y > 0):
+                self.set_turn_left()
+                time.sleep(3 / abs(wall.spherical.rot_y))
+                self.stop()
+            else:
+                self.set_turn_left()
+                time.sleep(3 / abs(wall.spherical.rot_y))
+                self.stop()
+
+
+        collision_forward = self.SENSORS.check_front_collision()
+        if (collision_forward):
+            self.set_turn_right()
+            time.sleep(1)
             self.stop()
-            print("finished turning")
 
-            local_angle = self.LOCAL.get_angle()
-            angle = self.get_angle_to_pos(x,y)
 
-        print(f"Now at angle: {angle} to {(x,y)}")
+        # angle = 4
+        # local_angle = self.LOCAL.get_angle()
+        # while abs(angle - local_angle) > self.angle_accuracy:
+        #     angle = self.get_angle_to_pos(x, y)
+        #     print(f"Current angle to {(x,y)} is {angle} radians")
+
+        #     if (angle - local_angle) > 0:
+        #         print("turning right")
+        #         self.set_turn_right(10)
+        #     else:
+        #         print("turning left")
+        #         self.set_turn_left(10)
+            
+        #     time.sleep(0.3)
+        #     self.stop()
+        #     print("finished turning")
+
+        #     local_angle = self.LOCAL.get_angle()
+        #     angle = self.get_angle_to_pos(x,y)
+
+        # print(f"Now at angle: {angle} to {(x,y)}")
         
         self.stop()
         # should now be looking at that location
@@ -216,8 +246,12 @@ class Movement:
         print("Starting to push tokens to center")
         start_time = utils.epoch_time()
         cur_time = utils.epoch_time()
+        print("checking if in zone")
+        in_zone = self.LOCAL.in_zone()
 
-        while (not self.LOCAL.in_zone() and cur_time - start_time < 25):
+        print("starting to look for zone")
+        while (not in_zone and cur_time - start_time < 25):
+            print("looping to find zone")
             collision_forward = self.SENSORS.check_front_collision()
             print(f"currently in scoring zone: {self.LOCAL.in_zone()}")
             print(f"time at: {cur_time - start_time}")
@@ -232,7 +266,7 @@ class Movement:
                 self.set_forward(20)
             else:
                 print(f"deteched a forward collision")
-                collision_forward = self.check_front_collision()
+                collision_forward = self.SENSORS.check_front_collision()
 
                 while (collision_forward):
                     print("Turning left to avoid collision")
@@ -240,7 +274,7 @@ class Movement:
                     time.sleep(0.5)
                     self.stop()
                     print("finished turning left, rechecking for collisions")
-                    collision_forward = self.check_front_collision()
+                    collision_forward = self.SENSORS.check_front_collision()
                 
                 print("Now out of the way of collisions")
                 self.set_forward(30)
@@ -248,7 +282,7 @@ class Movement:
                 self.stop()
                 print("Should now be gone around collision")
             
-            
+            in_zone = self.LOCAL.in_zone()
             cur_time = utils.epoch_time()
 
         print("Left tokens in center, moving away")
@@ -262,6 +296,10 @@ class Movement:
         self.motor_left.stop()
         self.motor_right.stop()
         print("Stopped")
+
+    def stop_instantly(self):
+        self.motor_left.stop()
+        self.motor_right.stop()
 
     def sweep_collect(self):
         # TODO test this!!!!
