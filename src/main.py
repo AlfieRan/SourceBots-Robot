@@ -1,3 +1,12 @@
+# --------------- LICENSE ---------------
+# Some or all of this code was originally created by Alfie Ranstead
+# https://github.com/alfieran or alfie.ranstead@outlook.com
+# During August 2022 for the Sourcebots Southampton University Competition
+# If you would like to use this code if your own projects please read the license:
+# https://github.com/AlfieRan/SourceBots-Robot
+# ------------- END LICENSE -------------
+
+
 from random import random
 from sbot import Robot
 import localisation
