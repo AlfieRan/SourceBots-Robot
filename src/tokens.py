@@ -9,7 +9,7 @@ class Token:
         self.expected_y = posY
         self.last_updated = utils.epoch_time()
 
-    def distance_from(self, pos: tuple(float)):
+    def distance_from(self, pos):
         return math.sqrt(((pos[0] - self.expected_x)**2) + ((pos[1] - self.expected_y)**2))
 
     def time_since_checked(self):

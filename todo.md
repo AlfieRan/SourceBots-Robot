@@ -8,6 +8,7 @@
 ## main
 
 -   main loop game plan
+-   CHECK TIME WAITS ARE IN SECONDS
 
 ## movement
 

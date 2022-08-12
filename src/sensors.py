@@ -1,45 +1,38 @@
 from sbot import Robot
-import utils
 
 TRIGGER_PIN=2
-ECHO_PINS=[3,4,5]
+ECHO_PINS=[5,3,4]
 
 class Sensors():
     def __init__(self, ROBOT: Robot):
         self.ROBOT = ROBOT
         self.ARDUINO = ROBOT.arduino
         self.COLLISION_TOLERANCE = 0.35
-
-        self.ultrasounds = [self.ARDUINO.ultrasound_sensors[TRIGGER_PIN, ECHO_PINS[i]] for i in range(0,3)]
-        self.ultrasound_data = [self.ultrasounds[i].distance for i in range(0,3)]
-        self.ultrasound_last_updated = utils.epoch_time()
         # 0=left, 1=middle, 2=right
 
-    def get_all(self):
-        self.ultrasound_data = []
-
-        for ultrasound in self.ultrasounds:
-            self.ultrasound_data.append(ultrasound.distance)
-
-        self.ultrasound_last_updated = utils.epoch_time
+    def collision_checker_internal(self, dist):
+        if dist == None:
+            return False
+        
+        return dist < self.COLLISION_TOLERANCE
 
     def check_front_collision(self):
-        return self.get_middle() < self.COLLISION_TOLERANCE
+        dist = self.get_middle()
+        return self.collision_checker_internal(dist)
 
     def check_left_collision(self):
-        return self.get_left() < self.COLLISION_TOLERANCE
+        dist = self.get_left()
+        return self.collision_checker_internal(dist)
     
     def check_right_collision(self):
-        return self.get_right() < self.COLLISION_TOLERANCE
+        dist = self.get_right()
+        return self.collision_checker_internal(dist)
 
     def get_left(self):
-        self.get_all()
-        return self.ultrasound_data[0]
+        return self.ARDUINO.ultrasound_sensors[TRIGGER_PIN, ECHO_PINS[0]].distance() 
 
     def get_middle(self):
-        self.get_all()
-        return self.ultrasound_data[1]
+        return self.ARDUINO.ultrasound_sensors[TRIGGER_PIN, ECHO_PINS[1]].distance() 
 
     def get_right(self):
-        self.get_all()
-        return self.ultrasound_data[2]
+        return self.ARDUINO.ultrasound_sensors[TRIGGER_PIN, ECHO_PINS[2]].distance() 

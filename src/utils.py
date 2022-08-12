@@ -22,16 +22,20 @@ def get_intersections(pos0, r0, pos1, r1, max_variance=2.7):
     x1 = pos1[0]
     y1 = pos1[1]
     dist = distance(pos0, pos1)
+    print(f"Intersection data: ({x0},{y0}) ({x1},{y1}), {dist}")
 
     if dist > r0 + r1:
         # circles don't intersect
+        print("Circles don't intersect")
         return None
 
     elif dist < abs(r0-r1):
         # one circle is inside the other
+        print("One circle is inside the other")
         return None
 
     elif dist == 0 and r0 == r1:
+        print("circles are identical")
         # circles are identical
         return None
 
